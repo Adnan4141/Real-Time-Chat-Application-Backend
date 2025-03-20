@@ -20,7 +20,7 @@ const expressServer = http.createServer(app);
 const  io =  initializeSocket(expressServer);
 
 const corsOptions = {
-   origin: ["http://localhost:5173", "http://localhost:5174",process.env.FRONTEND_URL],  // Add any other origins as needed
+   origin: ["*","http://localhost:5173", "http://localhost:5174",process.env.FRONTEND_URL],  // Add any other origins as needed
    methods: ["GET", "POST", "PUT", "DELETE"],  
    credentials: true,  
  };

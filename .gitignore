@@ -34,3 +34,4 @@ public/*.cache
 # Ignore local database files
 *.sqlite
 *.db
+.vercel

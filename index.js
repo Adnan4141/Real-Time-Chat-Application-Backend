@@ -28,6 +28,7 @@ const corsOptions = {
 
 app.use(cookieParser());
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use(cors(corsOptions));
 app.use(morgan("dev"))
 
@@ -47,6 +48,45 @@ app.use("/api/v1/users",UserRouter)
 
 app.get("/",(req,res)=>{
    res.send("Api is Working")
+})
+
+app.get("/data",(req,res)=>{
+   res.send([
+      {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password": "s3cr3tP@ss",
+        "avatar": "https://example.com/avatar1.jpg",
+        "address": {
+          "street": "123 Main St",
+          "city": "New York",
+          "state": "NY",
+          "zipCode": "10001",
+          "country": "USA"
+        },
+        "phone": "+1-555-555-5555",
+        "createdAt": "2023-01-01T12:00:00.000Z",
+        "updatedAt": "2023-10-01T12:00:00.000Z"
+      },
+      {
+        "id": "123e4567-e89b-12d3-a456-426614174001",
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "password": "p@ssw0rd",
+        "avatar": "https://example.com/avatar2.jpg",
+        "address": {
+          "street": "456 Elm St",
+          "city": "Los Angeles",
+          "state": "CA",
+          "zipCode": "90001",
+          "country": "USA"
+        },
+        "phone": "+1-555-555-5556",
+        "createdAt": "2023-02-01T12:00:00.000Z",
+        "updatedAt": "2023-10-01T12:00:00.000Z"
+      }
+    ])
 })
 
 

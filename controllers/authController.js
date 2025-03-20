@@ -132,6 +132,7 @@ export const login = async (req,res,next)=>{
       data:updateUser,
       token:newToken
     });
+    
   } catch (error) {
     console.log(error.message)
 

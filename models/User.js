@@ -29,6 +29,9 @@ const userSchema = new Schema(
     lastLogin: {
       type: Date,
     },
+    lastLogout:{
+      type:Date
+    }
   },
   {
     timestamps: true,

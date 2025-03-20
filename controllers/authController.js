@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
-import UserModel from "../models/User.js";
+
 import { isValidEmail } from "../utils/ErrorHandler/inputValidation/emailValidation.js";
 import { generatedToken } from "../utils/generatToken/GenreateToken.js";
+import UserModel from "../models/User.js";
 
 
 
@@ -9,11 +10,10 @@ import { generatedToken } from "../utils/generatToken/GenreateToken.js";
 
 export const register = async (req, res, next) => {
   const { username, email, password, photo } = req.body;
-  const userId = req.id || "";
-
+  
   try {
-
-    if (!username || !email || !password)
+ 
+    if (!username || !email || !password || !photo)
       return res.json({
         message: "Provide the require field",
         success: false,
@@ -35,6 +35,7 @@ export const register = async (req, res, next) => {
       username,
       email,
       password: hashedPassword,
+      photo
     };
 
     const newUser = await UserModel.create(payload);
@@ -67,6 +68,8 @@ export const register = async (req, res, next) => {
 
 // const login
 export const login = async (req,res,next)=>{
+
+  
   const {email,password} = req.body;
   try {
     if(!email || !password) 
@@ -109,28 +112,29 @@ export const login = async (req,res,next)=>{
       const newToken = await generatedToken(user)
 
       const currentDate = new Date;
-      await UserModel.findOneAndUpdate({email},{lastLogin:currentDate})
+      const updateUser =  await UserModel.findOneAndUpdate({email},{lastLogin:currentDate},{new:true}).select("-password")
   
+     console.log(updateUser)
    
       const cookiesOptions = {
           httpOnly:true,
-          secure:true,
-          samesite:"stric"
-      }
+          secure: process.env.NODE_ENV =="production",
+          sameSite:process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+          maxAge: 24 * 60 * 60 * 1000, 
+          
+        }
 
-
-    return res.cookie("token",newToken,cookiesOptions).json({
+       
+    return res.cookie("token",newToken,cookiesOptions).status(200).json({
       message: "User login successfully",
       success: true,
       error: false,
-      data:user,
+      data:updateUser,
       token:newToken
     });
-
-
   } catch (error) {
     console.log(error.message)
-    console.log(error)
+
     return res.status(500).json({
       message: error.message || error,
       success: false,
@@ -138,3 +142,33 @@ export const login = async (req,res,next)=>{
     })
    }
 }
+
+export const logout = async (req, res, next) => {
+  try {
+    // Clear the token cookie
+    res.clearCookie('token', {
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', 
+    });
+
+   
+    const userId = req?.id; 
+    if (userId) {
+      await UserModel.findByIdAndUpdate(userId, { lastLogout: new Date() });
+    }
+
+    // Send a success response
+    return res.status(200).json({
+      message: 'User logged out successfully',
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+    return res.status(500).json({
+      message: error.message || 'Internal server error',
+      success: false,
+      error: true,
+    });
+  }
+};

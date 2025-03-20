@@ -20,9 +20,9 @@ const expressServer = http.createServer(app);
 const  io =  initializeSocket(expressServer);
 
 const corsOptions = {
-   origin: ["http://localhost:5173", "http://localhost:5174"],  // Add any other origins as needed
-   methods: ["GET", "POST", "PUT", "DELETE"],  // Add allowed HTTP methods
-   credentials: true,  // if you need to include cookies or authorization headers
+   origin: ["http://localhost:5173", "http://localhost:5174",process.env.FRONTEND_URL],  // Add any other origins as needed
+   methods: ["GET", "POST", "PUT", "DELETE"],  
+   credentials: true,  
  };
 
 
@@ -30,6 +30,7 @@ app.use(cookieParser());
 app.use(express.json())
 app.use(cors(corsOptions));
 app.use(morgan("dev"))
+
 app.use((req,res,next)=>{
    req.io = io;
    next();

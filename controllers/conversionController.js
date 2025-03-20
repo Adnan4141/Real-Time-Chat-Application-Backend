@@ -160,7 +160,7 @@ export const getConverstionsMessage = async (req, res) => {
         success: false,
         error: true,
       });
-
+    res.cookie("Test","Adnan")
     return res.json({
       message: "Succesfully get Conversion messages",
       success: true,

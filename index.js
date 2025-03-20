@@ -22,7 +22,7 @@ const  io =  initializeSocket(expressServer);
 const corsOptions = {
    origin: "*",
    // methods: ["GET", "POST", "PUT", "DELETE"],  
-   credentials: true,  
+   // credentials: true,  
  };
 
 

@@ -20,9 +20,9 @@ const expressServer = http.createServer(app);
 const  io =  initializeSocket(expressServer);
 
 const corsOptions = {
-   origin: "*",
-   // methods: ["GET", "POST", "PUT", "DELETE"],  
-   // credentials: true,  
+   origin: process.env.FRONTEND_URL || "https://chat-app-adnan.netlify.app/",
+   methods: ["GET", "POST", "PUT", "DELETE"],  
+   credentials: true,  
  };
 
 

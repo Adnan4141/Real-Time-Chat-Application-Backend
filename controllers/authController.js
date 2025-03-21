@@ -68,8 +68,6 @@ export const register = async (req, res, next) => {
 
 // const login
 export const login = async (req,res,next)=>{
-
-  
   const {email,password} = req.body;
   try {
     if(!email || !password) 
@@ -132,7 +130,7 @@ export const login = async (req,res,next)=>{
       data:updateUser,
       token:newToken
     });
-    
+
   } catch (error) {
     console.log(error.message)
 

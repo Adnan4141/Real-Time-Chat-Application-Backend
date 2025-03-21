@@ -7,8 +7,12 @@ export const  initializeSocket = (server)=>{
    const users = new Map()
   const io = new Server(server,{
    cors: {
-      origin:  process.env.SOCKET_ORIGIN_URL || "http://localhost:3000", 
+      origin:  [
+        process.env.SOCKET_ORIGIN_URL ,
+         "http://localhost:5173"
+      ], 
       methods: ["GET", "POST"],
+      credentials: true
     },
   })
     

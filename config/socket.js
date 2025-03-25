@@ -1,46 +1,45 @@
-import { Server } from "socket.io"
+import { Server } from "socket.io";
 
+const userSocketMap = {};
 
-
-export const  initializeSocket = (server)=>{
-   
-   const users = new Map()
-  const io = new Server(server,{
-   cors: {
-      origin:  [
-        process.env.SOCKET_ORIGIN_URL ,
-         "http://localhost:5173"
-      ], 
+export const initializeSocket = (server) => {
+  const users = new Map();
+  const io = new Server(server, {
+    cors: {
+      origin: [process.env.FRONTEND_URL, "http://localhost:5173"],
       methods: ["GET", "POST"],
-      credentials: true
+      credentials: true,
     },
-  })
+  });
+
+  io.on("connection", (socket) => {
+    console.log("A user connected:", socket.id);
+
     
+
+    const userId = socket.handshake.query.userId;
   
-   io.on("connection",(socket)=>{
-      console.log("A user connected:", socket.id);
-   
-     socket.on("send_message",(data)=>{
-       io.emit("received_message",data)
-     })
+    if (userId) userSocketMap[userId] = socket.id;
 
-     socket.on("disconnect",()=>{
-      console.log("User disconnected: ",socket.id);
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-      // for(const [userId,socketId] of activeUsers.entries()){
-      //    if([socketId==socket.id]){
-      //       activeUsers.delete(userId)
-      //       io.emit("active_users", Array.from(activeUsers.keys())); 
-      //    }
-      //    break;
-      // }
-
-     })
-
-   })
+    socket.on("send_message", (data) => {
+      io.emit("received_message", data);
+    });
 
 
 
 
-return io;
-}
+    socket.on("disconnect", () => {
+      console.log("User disconnected: ", socket.id);
+
+      setTimeout(()=>{
+ delete userSocketMap[userId];
+      io.emit("getOnlineUsers", Object.keys(userSocketMap));
+      },10000)
+     
+    });
+  });
+
+  return io;
+};

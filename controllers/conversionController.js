@@ -94,7 +94,7 @@ export const getConversionsList = async (req, res) => {
         const otherUser = conv.participant.filter(
           (item) => item._id.toString() !== id.toString()
         );
-
+     
         const messages = conv.messages;
         const lastMessageId = messages[messages.length - 1];
 
@@ -112,6 +112,7 @@ export const getConversionsList = async (req, res) => {
           lastMessage: lastMessage,
           otherUserName: otherUser[0]?.username,
           otherUserPhoto: otherUser[0]?.photo,
+          otherUserId: otherUser[0]?._id,
         };
       })
     );
@@ -134,6 +135,7 @@ export const getConversionsList = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+
     return res.status(500).json({
       message: error.message || error,
       success: false,
@@ -168,7 +170,7 @@ export const getConverstionsMessage = async (req, res) => {
       data: messages || [],
     });
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message || error);
     return res.json({
       message: error.message || error,
       success: false,

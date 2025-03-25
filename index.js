@@ -20,7 +20,7 @@ const expressServer = http.createServer(app);
 const  io =  initializeSocket(expressServer);
 
 const corsOptions = {
-   origin: process.env.FRONTEND_URL || "https://chat-app-adnan.netlify.app/",
+   origin: process.env.FRONTEND_URL || "https://chat-app-adnan.netlify.app/" ,
    methods: ["GET", "POST", "PUT", "DELETE"],  
    credentials: true,  
  };
@@ -28,7 +28,6 @@ const corsOptions = {
 
 app.use(cookieParser());
 app.use(express.json())
-// app.use(express.urlencoded({extended:true}))
 app.use(cors(corsOptions));
 app.use(morgan("dev"))
 

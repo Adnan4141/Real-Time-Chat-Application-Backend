@@ -171,3 +171,13 @@ export const logout = async (req, res, next) => {
     });
   }
 };
+
+
+export const checkAuth = ()=>{
+  
+  return res.json({
+    message: "Incorrect password",
+    success: false,
+    error: true,
+  })
+}
